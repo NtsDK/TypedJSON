@@ -1230,42 +1230,6 @@ interface TypedJSON {
     parse(text: string, reviver?: (key: any, value: any) => any): any;
 
     /**
-     * Converts a JavaScript value to a JavaScript Object Notation (JSON) string.
-     * @param value A JavaScript value, usually an object or array, to be converted.
-     */
-    stringify(value: any): string;
-
-    /**
-     * Converts a JavaScript value to a JavaScript Object Notation (JSON) string.
-     * @param value A JavaScript value, usually an object or array, to be converted.
-     * @param replacer A function that transforms the results.
-     */
-    stringify(value: any, replacer: (key: string, value: any) => any): string;
-
-    /**
-     * Converts a JavaScript value to a JavaScript Object Notation (JSON) string.
-     * @param value A JavaScript value, usually an object or array, to be converted.
-     * @param replacer Array that transforms the results.
-     */
-    stringify(value: any, replacer: any[]): string;
-
-    /**
-     * Converts a JavaScript value to a JavaScript Object Notation (JSON) string.
-     * @param value A JavaScript value, usually an object or array, to be converted.
-     * @param replacer A function that transforms the results.
-     * @param space Adds indentation, white space, and line break characters to the return-value JSON text to make it easier to read.
-     */
-    stringify(value: any, replacer: (key: string, value: any) => any, space: string | number): string;
-
-    /**
-     * Converts a JavaScript value to a JavaScript Object Notation (JSON) string.
-     * @param value A JavaScript value, usually an object or array, to be converted.
-     * @param replacer Array that transforms the results.
-     * @param space Adds indentation, white space, and line break characters to the return-value JSON text to make it easier to read.
-     */
-    stringify(value: any, replacer: any[], space: string | number): string;
-
-    /**
      * Converts a JavaScript Object Notation (JSON) string into an instance of the provided class.
      * @param text A valid JSON string.
      * @param type A class from which an instance is created using the provided JSON string.

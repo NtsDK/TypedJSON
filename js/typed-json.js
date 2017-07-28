@@ -830,7 +830,7 @@ var Deserializer = (function () {
                 throw new Error("JSON exceeds object count limit (" + settings.maxObjects + ").");
             }
         }
-        instance = this.readJsonToInstance(value, {
+        instance = this.readJsonToInstance('[root object]', value, {
             objectType: type,
             typeHintPropertyKey: settings.typeHintPropertyKey,
             enableTypeHints: settings.enableTypeHints,
@@ -868,7 +868,7 @@ var Deserializer = (function () {
                 return 1;
         }
     };
-    Deserializer.readJsonToInstance = function (json, settings) {
+    Deserializer.readJsonToInstance = function (memberName, json, settings) {
         var _this = this;
         var object;
         var objectMetadata;
@@ -878,7 +878,7 @@ var Deserializer = (function () {
         var knownTypes;
         if (!Helpers.valueIsDefined(json)) {
             if (settings.isRequired) {
-                throw new Error("Missing required member.");
+                throw new Error("Missing required member " + memberName);
             }
             // Uninitialized or null json returned "as-is".
             object = json;
@@ -900,7 +900,7 @@ var Deserializer = (function () {
             object = [];
             // Read array elements recursively.
             json.forEach(function (element) {
-                object.push(_this.readJsonToInstance(element, {
+                object.push(_this.readJsonToInstance(memberName, element, {
                     elements: settings.elements ? settings.elements.elements : null,
                     enableTypeHints: settings.enableTypeHints,
                     knownTypes: settings.knownTypes,
@@ -963,7 +963,7 @@ var Deserializer = (function () {
                     object = new ObjectType();
                     Object.keys(objectMetadata.dataMembers).forEach(function (propertyKey) {
                         var propertyMetadata = objectMetadata.dataMembers[propertyKey];
-                        temp = _this.readJsonToInstance(json[propertyMetadata.name], {
+                        temp = _this.readJsonToInstance(propertyMetadata.name, json[propertyMetadata.name], {
                             elements: propertyMetadata.elements,
                             enableTypeHints: settings.enableTypeHints,
                             isRequired: propertyMetadata.isRequired,
@@ -990,7 +990,7 @@ var Deserializer = (function () {
                         if (Helpers.valueIsDefined(json[propertyKey])) {
                             objectType = json[propertyKey].constructor;
                         }
-                        object[propertyKey] = _this.readJsonToInstance(json[propertyKey], {
+                        object[propertyKey] = _this.readJsonToInstance(propertyKey, json[propertyKey], {
                             enableTypeHints: settings.enableTypeHints,
                             knownTypes: settings.knownTypes,
                             objectType: objectType,

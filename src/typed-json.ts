@@ -1025,7 +1025,7 @@ abstract class Deserializer {
             }
         }
 
-        instance = this.readJsonToInstance(value, {
+        instance = this.readJsonToInstance('[root object]', value, {
             objectType: type,
             typeHintPropertyKey: settings.typeHintPropertyKey,
             enableTypeHints: settings.enableTypeHints,
@@ -1070,6 +1070,7 @@ abstract class Deserializer {
     }
 
     private static readJsonToInstance<T>(
+        memberName: string,
         json: any,
         settings: ReadSettings<T>
     ): T {
@@ -1082,7 +1083,7 @@ abstract class Deserializer {
 
         if (!Helpers.valueIsDefined(json)) {
             if (settings.isRequired) {
-                throw new Error(`Missing required member.`);
+                throw new Error(`Missing required member ${memberName}`);
             }
             // Uninitialized or null json returned "as-is".
             object = json;
@@ -1106,7 +1107,7 @@ abstract class Deserializer {
 
             // Read array elements recursively.
             json.forEach(element => {
-                object.push(this.readJsonToInstance(element, {
+                object.push(this.readJsonToInstance(memberName, element, {
                     elements: settings.elements ? settings.elements.elements : null,
                     enableTypeHints: settings.enableTypeHints,
                     knownTypes: settings.knownTypes,
@@ -1174,7 +1175,7 @@ abstract class Deserializer {
                     Object.keys(objectMetadata.dataMembers).forEach(propertyKey => {
                         var propertyMetadata = objectMetadata.dataMembers[propertyKey];
 
-                        temp = this.readJsonToInstance(json[propertyMetadata.name], {
+                        temp = this.readJsonToInstance(propertyMetadata.name, json[propertyMetadata.name], {
                             elements: propertyMetadata.elements,
                             enableTypeHints: settings.enableTypeHints,
                             isRequired: propertyMetadata.isRequired,
@@ -1202,7 +1203,7 @@ abstract class Deserializer {
                         if (Helpers.valueIsDefined(json[propertyKey])) {
                             objectType = json[propertyKey].constructor;
                         }
-                        object[propertyKey] = this.readJsonToInstance(json[propertyKey], {
+                        object[propertyKey] = this.readJsonToInstance(propertyKey, json[propertyKey], {
                             enableTypeHints: settings.enableTypeHints,
                             knownTypes: settings.knownTypes,
                             objectType: objectType,
